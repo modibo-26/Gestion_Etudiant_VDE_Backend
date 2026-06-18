@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+//@Tag(name = "Connection", description = "Connection")
 public class AuthController {
 
     private final UserRepository userRepository;

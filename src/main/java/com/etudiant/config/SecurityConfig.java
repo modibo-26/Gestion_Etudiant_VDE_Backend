@@ -35,6 +35,15 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                    // === Chemins Swagger / OpenAPI à autoriser ===
+                .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/index.html",
+                        "/api-docs/**"
+                ).permitAll()
+                    //les chemins vers l'authentification
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
             )

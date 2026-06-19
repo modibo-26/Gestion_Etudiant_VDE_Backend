@@ -16,7 +16,7 @@ public interface IUserService extends ICrudService<User, Long> {
     public List<UserDto> getEtudiants();
     public String generateEmail(User user);
     public String generatePassword();
-    public UserCreationResponse createUser(User user);
+    public UserCreationResponse createUser(UserDto user);
     public UserDto getConectUser(String token);
     public List<UserDto> findAllUsers();
 }

@@ -34,8 +34,8 @@ public class SuperFiliereService implements ISuperFiliereService {
     }
 
     @Override
-    public Optional<SuperFiliere> findById(Long aLong) {
-        return repository.findById(aLong);
+    public SuperFiliere findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Super Filière non trouvée"));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.etudiant.dto;
 
 import com.etudiant.entity.Filiere;
 import com.etudiant.entity.Role;
+import com.etudiant.entity.SuperFiliere;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public class UserDto {
     private double progression;
     private LocalDateTime dateEntree;
     private Filiere filiere;
+    private SuperFiliere superFiliere;
 
 
     public Long getId() {
@@ -88,5 +90,9 @@ public class UserDto {
     public void setFiliere(Filiere filiere) {
         this.filiere = filiere;
     }
+
+    public SuperFiliere getSuperFiliere() {return superFiliere;}
+
+    public void setSuperFiliere(SuperFiliere superFiliere) {this.superFiliere = superFiliere;}
 }
 

@@ -23,7 +23,7 @@ public class ModuleController {
         return service.findAll();
     }
     @GetMapping("/{id}")
-    public Optional<Module> findByID(@PathVariable Long id) {
+    public Module findByID(@PathVariable Long id) {
         return service.findById(id);
     }
 

@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,8 +40,8 @@ public class UserService implements IUserService{
         return repository.findAll();
     }
     @Override
-    public Optional<User> findById(Long id) {
-        return repository.findById(id);
+    public User findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvée"));
     }
 
     @Override
@@ -58,14 +57,14 @@ public class UserService implements IUserService{
 
     @Override
     public UserDto getUserById(Long id) {
-        User user = repository.findById(id).orElseThrow();
+        User user = findById(id);
         return toDTO(user);
     }
 
     @Transactional
     @Override
     public void assignerFiliere(Long userId, Long filiereId) {
-        User user = repository.findById(userId).orElseThrow();
+        User user = findById(userId);
         Filiere filiere = filiereRepository.findById(filiereId).orElseThrow();
         if (user.getFiliere() != null) {
             throw new RuntimeException("L'utilisateur a déjà une filière");
@@ -85,7 +84,7 @@ public class UserService implements IUserService{
 
     @Override
     public List<Module> getModules(Long id) {
-        User user =  repository.findById(id).orElseThrow();
+        User user =  findById(id);
         return user.getFiliere().getModules();
     }
 
@@ -117,7 +116,13 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public UserCreationResponse createUser(User user) {
+    public UserCreationResponse createUser(UserDto userDto) {
+        User user = User.builder()
+                .nom(userDto.getNom())
+                .prenom(userDto.getPrenom())
+                .role(userDto.getRole())
+                .superFiliere(userDto.getSuperFiliere())
+                .build();
         String email = generateEmail(user);
         String rawPassword = generatePassword();
         user.setEmail(email);
@@ -152,13 +157,14 @@ public class UserService implements IUserService{
         dto.setFiliere(user.getFiliere());
         dto.setDateEntree(user.getDateEntree());
         dto.setProgression(calculateProgression(user));
+        dto.setSuperFiliere(user.getSuperFiliere());
         return dto;
     }
 
     private Double calculateProgression(User user) {
         List<ModuleValidation> mvs =  getValidations(user.getId());
-        Integer total = mvs.size();
-        Double termine = 0.00;
+        int total = mvs.size();
+        double termine = 0.00;
         if (total == 0) return 0.0;
         for (ModuleValidation mv : mvs) {
             if (mv.getStatut() == StatutModule.TERMINE) {

@@ -21,8 +21,8 @@ public class ModuleService implements IModuleService{
     }
 
     @Override
-    public Optional<Module> findById(Long id) {
-        return repository.findById(id);
+    public Module findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Module non trouvée"));
     }
 
     @Override

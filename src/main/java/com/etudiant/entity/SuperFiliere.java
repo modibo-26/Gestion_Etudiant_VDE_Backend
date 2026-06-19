@@ -28,9 +28,12 @@ public class SuperFiliere {
     @JsonIgnore
     private List<Filiere> filieres;
 
-
     public int getNbEtudiants() {
         return users != null ? users.size() : 0;
+    }
+
+    public int getNbFilieres() {
+        return filieres != null ? filieres.size() : 0;
     }
 
 }

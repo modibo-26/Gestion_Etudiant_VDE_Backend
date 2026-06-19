@@ -24,7 +24,7 @@ public class FiliereController {
         return service.findAll();
     }
     @GetMapping("/{id}")
-    public Optional<Filiere> findByID(@PathVariable Long id) {
+    public Filiere findByID(@PathVariable Long id) {
         return service.findById(id);
     }
 

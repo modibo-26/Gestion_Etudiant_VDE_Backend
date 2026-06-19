@@ -25,8 +25,8 @@ public class ModuleValidationService implements IModuleValidationService{
     }
 
     @Override
-    public Optional<ModuleValidation> findById(Long id) {
-        return repository.findById(id);
+    public ModuleValidation findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Module Validation non trouvé"));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ModuleValidationService implements IModuleValidationService{
 
     @Override
     public ModuleValidation updateStatut(Long id, StatutModule statut) {
-        ModuleValidation mv = repository.findById(id).orElseThrow();
+        ModuleValidation mv = findById(id);
         mv.setStatut(statut);
         if (statut == StatutModule.TERMINE) {
             mv.setValidationDate(LocalDateTime.now());
@@ -51,7 +51,7 @@ public class ModuleValidationService implements IModuleValidationService{
 
     @Override
     public ModuleValidation updateNote(Long id, Double note) {
-        ModuleValidation mv = repository.findById(id).orElseThrow();
+        ModuleValidation mv = findById(id);
         mv.setNote(note);
         return repository.save(mv);
     }

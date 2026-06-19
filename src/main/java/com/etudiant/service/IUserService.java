@@ -13,10 +13,10 @@ public interface IUserService extends ICrudService<User, Long> {
     public void assignerFiliere(Long userId, Long filiereId);
     public List<Module> getModules(Long id);
     public List<ModuleValidation> getValidations(Long id);
-    public List<User> getEtudiants();
+    public List<UserDto> getEtudiants();
     public String generateEmail(User user);
     public String generatePassword();
     public UserCreationResponse createUser(User user);
     public UserDto getConectUser(String token);
-
+    public List<UserDto> findAllUsers();
 }

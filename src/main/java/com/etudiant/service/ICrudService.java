@@ -1,5 +1,7 @@
 package com.etudiant.service;
 
+import com.etudiant.entity.Module;
+
 import java.util.List;
 import java.util.Optional;
 

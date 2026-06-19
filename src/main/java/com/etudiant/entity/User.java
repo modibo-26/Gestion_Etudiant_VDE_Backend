@@ -41,6 +41,10 @@ public class User {
     @JoinColumn(name = "filiere_id")
     private Filiere filiere;
 
+    @ManyToOne
+    @JoinColumn(name = "super_filiere_id")
+    private SuperFiliere superFiliere;
+
 
     @PrePersist
     public void prePersist() {

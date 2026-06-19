@@ -10,31 +10,23 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@Table(name = "filiere")
+@Table(name = "super_filiere")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Filiere {
+public class SuperFiliere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
     private String description;
-    @OneToMany(mappedBy = "filiere")
+    @OneToMany(mappedBy = "super_filiere")
     @JsonIgnore
     private List<User> users;
-    @ManyToMany
-    @JoinTable(
-        name = "filiere_module",
-        joinColumns = @JoinColumn(name = "filliere_id"),
-        inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
-    private List<Module> modules;
-
-    @ManyToOne
-    @JoinColumn(name = "super_filiere_id")
-    private SuperFiliere superFiliere;
+    @OneToMany(mappedBy = "super_filiere")
+    @JsonIgnore
+    private List<Filiere> filieres;
 
 
     public int getNbEtudiants() {

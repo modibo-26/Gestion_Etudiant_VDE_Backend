@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -22,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<User> findAll() {
-        return service.findAll();
+    public List<UserDto> findAll() {
+        return service.findAllUsers();
     }
 
     @GetMapping("/me")
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/etudiants")
-    public List<User> getEtudiants() {
+    public List<UserDto> getEtudiants() {
         return service.getEtudiants();
     }
 

@@ -1,5 +1,6 @@
 package com.etudiant.service;
 
+import com.etudiant.entity.Module;
 import com.etudiant.entity.ModuleValidation;
 import com.etudiant.entity.StatutModule;
 import com.etudiant.repository.ModuleValidationRepository;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService{
@@ -39,7 +40,6 @@ public class UserService implements IUserService{
     public List<User> findAll() {
         return repository.findAll();
     }
-
     @Override
     public Optional<User> findById(Long id) {
         return repository.findById(id);
@@ -95,8 +95,8 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public List<User> getEtudiants() {
-        return repository.findByRole(Role.ETUDIANT);
+    public List<UserDto> getEtudiants() {
+        return repository.findByRole(Role.ETUDIANT).stream().map(user -> toDTO(user)).collect(Collectors.toList());
     }
 
     @Override
@@ -136,7 +136,12 @@ public class UserService implements IUserService{
         return toDTO(user);
     }
 
-    private UserDto toDTO(User user) {
+    @Override
+    public List<UserDto> findAllUsers() {
+        return repository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    public UserDto toDTO(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setCode(user.getCode());

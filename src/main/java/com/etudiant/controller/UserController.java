@@ -55,7 +55,7 @@ public class UserController {
         return service.save(user);
     }
     @PostMapping("/create")
-    public UserCreationResponse createUser(@RequestBody User user) {
+    public UserCreationResponse createUser(@RequestBody UserDto user) {
         return service.createUser(user);
     }
 

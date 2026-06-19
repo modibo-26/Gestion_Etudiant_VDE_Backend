@@ -30,8 +30,8 @@ public class FiliereService implements IFiliereService{
     }
 
     @Override
-    public Optional<Filiere> findById(Long id) {
-        return repository.findById(id);
+    public Filiere findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Filière non trouvée"));
     }
 
     @Override
@@ -46,20 +46,20 @@ public class FiliereService implements IFiliereService{
 
     @Override
     public List<User> getUsers(Long id) {
-        Filiere filiere = repository.findById(id).orElseThrow();
+        Filiere filiere = findById(id);
         return filiere.getUsers();
     }
 
     @Override
     public List<Module> getModules(Long id) {
-        Filiere filiere = repository.findById(id).orElseThrow();
+        Filiere filiere = findById(id);
         return filiere.getModules();
     }
 
     @Transactional
     @Override
     public Filiere addModule(Long filiereId, Long moduleId) {
-        Filiere filiere = repository.findById(filiereId).orElseThrow();
+        Filiere filiere = findById(filiereId);
         Module module = moduleRepository.findById(moduleId).orElseThrow();
         if (!filiere.getModules().contains(module)) {
             filiere.getModules().add(module);
@@ -78,7 +78,7 @@ public class FiliereService implements IFiliereService{
     @Transactional
     @Override
     public Filiere removeModule(Long filiereId, Long moduleId) {
-        Filiere filiere = repository.findById(filiereId).orElseThrow();
+        Filiere filiere = findById(filiereId);
         Module module = moduleRepository.findById(moduleId).orElseThrow();
         if (filiere.getModules().contains(module)) {
             filiere.getModules().remove(module);

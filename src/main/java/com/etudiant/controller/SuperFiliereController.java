@@ -22,7 +22,7 @@ public class SuperFiliereController {
         return service.findAll();
     }
     @GetMapping("/{id}")
-    public Optional<SuperFiliere> findByID(@PathVariable Long id) {
+    public SuperFiliere findByID(@PathVariable Long id) {
         return service.findById(id);
     }
 

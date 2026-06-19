@@ -25,7 +25,7 @@ public class ModuleValidationController {
         return service.findAll();
     }
     @GetMapping("/{id}")
-    public Optional<ModuleValidation> findByID(@PathVariable Long id) {
+    public ModuleValidation findByID(@PathVariable Long id) {
         return service.findById(id);
     }
 

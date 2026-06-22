@@ -21,10 +21,10 @@ public class SuperFiliere {
     private Long id;
     private String nom;
     private String description;
-    @OneToMany(mappedBy = "super_filiere")
+    @OneToMany(mappedBy = "superFiliere")
     @JsonIgnore
     private List<User> users;
-    @OneToMany(mappedBy = "super_filiere")
+    @OneToMany(mappedBy = "superFiliere")
     @JsonIgnore
     private List<Filiere> filieres;
 

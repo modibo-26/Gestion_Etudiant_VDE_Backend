@@ -26,9 +26,9 @@ public class SuperFiliereController {
         return service.findById(id);
     }
 
-    @GetMapping("/{id}/users")
-    public List<User> getUsers(@PathVariable Long id) {
-        return service.getUsers(id);
+    @GetMapping("/{id}/filieres")
+    public List<Filiere> getFilieres(@PathVariable Long id) {
+        return service.getFilieres(id);
     }
 
     @DeleteMapping("/{id}")

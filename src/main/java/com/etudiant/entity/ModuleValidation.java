@@ -15,12 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
 public class ModuleValidation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     private StatutModule statut = StatutModule.A_FAIRE;
     private LocalDateTime validationDate = null;

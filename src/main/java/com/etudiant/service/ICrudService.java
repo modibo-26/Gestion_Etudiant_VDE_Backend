@@ -1,13 +1,9 @@
 package com.etudiant.service;
 
-import com.etudiant.entity.Module;
-
-import java.util.List;
-import java.util.Optional;
+import com.etudiant.dto.FiliereDto;
 
 public interface ICrudService<T, ID> {
-    List<T> findAll();
+
     T findById(ID id);
-    T save(T entity);
     void deleteById(ID id);
 }

@@ -1,5 +1,6 @@
 package com.etudiant.repository;
 
+import com.etudiant.dto.UserDto;
 import com.etudiant.entity.ModuleValidation;
 import com.etudiant.entity.Role;
 import com.etudiant.entity.User;
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRole(Role role);
 
     Boolean existsUserByEmail(String email);
+
+    List<User> findBySuperFiliere_Id(Long superFiliereId);
 }

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public User save(@RequestBody User user) {
+    public UserDto save(@RequestBody User user) {
         return service.save(user);
     }
     @PostMapping("/create")
@@ -70,4 +71,15 @@ public class UserController {
         service.deleteById(id);
     }
 
+    @GetMapping("/resetPassword/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserCreationResponse resetPassword(@PathVariable Long id) {
+        return service.resetPassword(id);
+    }
+
+    @GetMapping("/superFiliere/{id}")
+    //@PreAuthorize("hasRole({'ADMIN','FORMATEUR'})")
+    public List <UserDto> usersBySuperFiliere(@PathVariable Long id) {
+        return service.getUsersBySuperFiliere(id);
+    }
 }

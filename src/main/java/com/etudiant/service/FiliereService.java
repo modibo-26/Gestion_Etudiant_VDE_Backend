@@ -1,32 +1,38 @@
 package com.etudiant.service;
 
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.entity.*;
 import com.etudiant.entity.Module;
+import com.etudiant.mappers.FiliereMapper;
 import com.etudiant.repository.FiliereRepository;
 import com.etudiant.repository.ModuleRepository;
 import com.etudiant.repository.ModuleValidationRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
+import java.util.Objects;
+import java.util.stream.Collectors;
+@AllArgsConstructor
 @Service
 public class FiliereService implements IFiliereService{
 
     private final FiliereRepository repository;
     private final ModuleRepository moduleRepository;
     private final ModuleValidationRepository moduleValidationRepository;
+    private final FiliereMapper filiereMapper;
+    private final UserService userService;
+    private final ModuleService moduleService;
+    private final SuperFiliereService superFiliereService;
 
-    public FiliereService(FiliereRepository repository, ModuleRepository moduleRepository, ModuleValidationRepository moduleValidationRepository) {
-        this.repository = repository;
-        this.moduleRepository = moduleRepository;
-        this.moduleValidationRepository = moduleValidationRepository;
-    }
 
     @Override
-    public List<Filiere> findAll() {
-        return repository.findAll();
+    public List<FiliereDto> findAll() {
+        return repository.findAll().stream()
+                .filter(Objects::nonNull)
+                .map(filiere-> filiereMapper.toFiliereDto(filiere))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -35,8 +41,10 @@ public class FiliereService implements IFiliereService{
     }
 
     @Override
-    public Filiere save(Filiere filiere) {
-        return repository.save(filiere);
+    public FiliereDto save(FiliereDto filiere) {
+        Filiere fil=filiereMapper.toFiliere(filiere,userService,moduleService,superFiliereService);
+        Filiere savedFiliere = repository.save(fil);
+        return filiereMapper.toFiliereDto(savedFiliere);
     }
 
     @Override
@@ -47,7 +55,7 @@ public class FiliereService implements IFiliereService{
     @Override
     public List<User> getUsers(Long id) {
         Filiere filiere = findById(id);
-        return filiere.getUsers();
+        return filiere.getUsers().stream().filter(user->user.getRole().name()=="ETUDIANT").collect(Collectors.toList());
     }
 
     @Override
@@ -64,11 +72,10 @@ public class FiliereService implements IFiliereService{
         if (!filiere.getModules().contains(module)) {
             filiere.getModules().add(module);
             for (User user : getUsers(filiereId)) {
-                ModuleValidation mv = ModuleValidation.builder()
-                        .user(user)
-                        .module(module)
-                        .statut(StatutModule.A_FAIRE)
-                        .build();
+                ModuleValidation mv = new ModuleValidation();
+                mv.setUser(user);
+                mv.setModule(module);
+                mv.setStatut(StatutModule.A_FAIRE);
                 moduleValidationRepository.save(mv);
             }
         }
@@ -87,6 +94,18 @@ public class FiliereService implements IFiliereService{
             }
         }
         return repository.save(filiere);
+    }
+
+    @Override
+    public List<FiliereDto> getFilieresBySuperFiliere_Id(Long superFiliereId) {
+        return repository.getFilieresBySuperFiliere_Id(superFiliereId)
+                .stream()
+                .map(filiere ->filiereMapper.toFiliereDto(filiere))
+                .collect(Collectors.toList());
+    }
+
+    public List<Module> getModulesByFiliere(Long id) {
+        return repository.findById(id).get().getModules();
     }
 
 }

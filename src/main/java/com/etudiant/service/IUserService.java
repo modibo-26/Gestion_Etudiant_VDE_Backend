@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface IUserService extends ICrudService<User, Long> {
 
+    List<UserDto> findAll();
+    public  UserDto save(User user);
     public UserDto getUserById(Long id);
     public void assignerFiliere(Long userId, Long filiereId);
     public List<Module> getModules(Long id);
@@ -19,4 +21,6 @@ public interface IUserService extends ICrudService<User, Long> {
     public UserCreationResponse createUser(UserDto user);
     public UserDto getConectUser(String token);
     public List<UserDto> findAllUsers();
+
+    public List<UserDto> getUsersBySuperFiliere(Long superFiliereId);
 }

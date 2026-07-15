@@ -1,11 +1,11 @@
 package com.etudiant.service;
 
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.entity.Module;
 import com.etudiant.repository.ModuleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ModuleService implements IModuleService{
@@ -34,4 +34,5 @@ public class ModuleService implements IModuleService{
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
 }

@@ -15,9 +15,8 @@ public class UserDto {
     private Role role;
     private double progression;
     private LocalDateTime dateEntree;
-    private Filiere filiere;
-    private SuperFiliere superFiliere;
-
+    private Long filiereId;
+    private Long superFiliereId;
 
     public Long getId() {
         return id;
@@ -83,16 +82,17 @@ public class UserDto {
         this.dateEntree = dateEntree;
     }
 
-    public Filiere getFiliere() {
-        return filiere;
+    public Long getFiliereId() {
+        return filiereId;
     }
 
-    public void setFiliere(Filiere filiere) {
-        this.filiere = filiere;
+    public void setFiliereId(Long filiereId) {
+        this.filiereId = filiereId;
     }
 
-    public SuperFiliere getSuperFiliere() {return superFiliere;}
+    public Long getSuperFiliereId() {return superFiliereId;}
 
-    public void setSuperFiliere(SuperFiliere superFiliere) {this.superFiliere = superFiliere;}
+    public void setSuperFiliereId(Long superFiliere) {this.superFiliereId = superFiliere;}
+
 }
 

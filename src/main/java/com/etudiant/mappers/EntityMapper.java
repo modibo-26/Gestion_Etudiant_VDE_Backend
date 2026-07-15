@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.mappers;
+package com.etudiant.mappers;
 
 import java.util.List;
 

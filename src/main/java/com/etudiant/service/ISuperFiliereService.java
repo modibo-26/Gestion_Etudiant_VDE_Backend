@@ -8,9 +8,13 @@ import java.util.List;
 
 public interface ISuperFiliereService extends ICrudService<SuperFiliere, Long> {
 
-    public List<User> getUsers(Long id);
+    //public List<User> getUsers(Long id);
+
+    List<SuperFiliere> findAll();
 
     public List<Filiere> getFilieres(Long id);
+
+    public SuperFiliere save(SuperFiliere superFiliere);
 
 
 }

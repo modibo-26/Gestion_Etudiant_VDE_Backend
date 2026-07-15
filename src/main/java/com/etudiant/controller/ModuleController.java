@@ -1,6 +1,7 @@
 package com.etudiant.controller;
 
 import com.etudiant.entity.Module;
+import com.etudiant.entity.User;
 import com.etudiant.service.ModuleService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -42,4 +43,5 @@ public class ModuleController {
     public void DeleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
+
 }

@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Builder
 public class SuperFiliere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +22,7 @@ public class SuperFiliere {
     private String description;
     @OneToMany(mappedBy = "superFiliere")
     @JsonIgnore
-    private List<User> users;
-    @OneToMany(mappedBy = "superFiliere")
-    @JsonIgnore
     private List<Filiere> filieres;
-
-    public int getNbEtudiants() {
-        return users != null ? users.size() : 0;
-    }
 
     public int getNbFilieres() {
         return filieres != null ? filieres.size() : 0;

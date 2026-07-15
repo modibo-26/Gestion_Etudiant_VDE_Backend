@@ -1,31 +1,26 @@
 package com.etudiant.service;
 
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.entity.Filiere;
 import com.etudiant.entity.SuperFiliere;
-import com.etudiant.entity.User;
+import com.etudiant.repository.FiliereRepository;
 import com.etudiant.repository.SuperFiliereRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SuperFiliereService implements ISuperFiliereService {
 
     private final SuperFiliereRepository repository;
-
-    @Override
-    public List<User> getUsers(Long id) {
-        List<User> users = repository.findById(id).get().getUsers();
-        return users;
-    }
+    private final FiliereRepository filiereRepository;
 
     @Override
     public List<Filiere> getFilieres(Long id) {
-        return repository.findById(id).get().getFilieres();
+        return filiereRepository.findAll().stream().filter(filiere -> filiere.getSuperFiliere().getId().equals(id)).collect(Collectors.toList());
     }
 
     @Override
@@ -39,8 +34,8 @@ public class SuperFiliereService implements ISuperFiliereService {
     }
 
     @Override
-    public SuperFiliere save(SuperFiliere entity) {
-        return repository.save(entity);
+    public SuperFiliere save(SuperFiliere superFiliere) {
+        return repository.save(superFiliere);
     }
 
     @Override

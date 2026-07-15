@@ -1,9 +1,11 @@
 package com.etudiant.controller;
 
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.entity.Filiere;
 import com.etudiant.entity.Module;
 import com.etudiant.entity.User;
 import com.etudiant.service.FiliereService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,15 +14,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/filieres")
+@AllArgsConstructor
 public class FiliereController {
     private final FiliereService service;
 
-    public FiliereController(FiliereService service) {
-        this.service = service;
-    }
 
     @GetMapping()
-    public List<Filiere> findAll() {
+    public List<FiliereDto> findAll() {
         return service.findAll();
     }
     @GetMapping("/{id}")
@@ -33,14 +33,26 @@ public class FiliereController {
         return service.getUsers(id);
     }
 
+    @GetMapping("/{id}/filiere_modules")
+    public List<Module> getModulesByFiliere(@PathVariable Long id) {
+        return service.getModulesByFiliere(id);
+    }
+
     @GetMapping("/{id}/modules")
     public List<Module> getModule(@PathVariable Long id) {
         return service.getModules(id);
     }
 
+    @GetMapping("/{id}/superFiliere")
+    public List<Module> getBySUperFiliere(@PathVariable Long superFiliereId) {
+        return service.getModules(superFiliereId);
+    }
+
     @PostMapping()
-    public Filiere save(@RequestBody Filiere filiere) {
-        return service.save(filiere);
+    public FiliereDto save(@RequestBody FiliereDto filiereDto) {
+
+        System.out.println(">>>>>>>>>>>>>>>>>><<<<<<<<<<<< POST /filieres");
+        return service.save(filiereDto);
     }
 
     @PostMapping("/{id}/modules/{moduleId}")
@@ -49,8 +61,8 @@ public class FiliereController {
     }
 
     @PutMapping()
-    public Filiere update(@RequestBody Filiere filiere) {
-        return service.save(filiere);
+    public FiliereDto update(@RequestBody FiliereDto filiereDto) {
+        return service.save(filiereDto);
     }
 
     @DeleteMapping("/{id}/modules/{moduleId}")

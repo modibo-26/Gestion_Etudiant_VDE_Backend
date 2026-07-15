@@ -1,6 +1,6 @@
 package com.etudiant.service;
 
-import com.etudiant.entity.Module;
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.entity.ModuleValidation;
 import com.etudiant.entity.StatutModule;
 import com.etudiant.repository.ModuleValidationRepository;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ModuleValidationService implements IModuleValidationService{

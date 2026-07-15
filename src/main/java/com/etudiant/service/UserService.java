@@ -1,43 +1,40 @@
 package com.etudiant.service;
 
+import com.etudiant.dto.FiliereDto;
 import com.etudiant.dto.UserCreationResponse;
 import com.etudiant.dto.UserDto;
 import com.etudiant.entity.*;
 import com.etudiant.entity.Module;
 import com.etudiant.repository.FiliereRepository;
 import com.etudiant.repository.ModuleValidationRepository;
+import com.etudiant.repository.SuperFiliereRepository;
 import com.etudiant.repository.UserRepository;
 import com.etudiant.security.JwtService;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @Service
 public class UserService implements IUserService{
 
     private final UserRepository repository;
     private final FiliereRepository filiereRepository;
+    private final SuperFiliereRepository superFiliereRepository;
     private final ModuleValidationRepository moduleValidationRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwt;
 
 
-    public UserService(UserRepository repository, FiliereRepository filiereRepository, ModuleValidationRepository moduleValidationRepository, PasswordEncoder passwordEncoder, JwtService jwt) {
-        this.repository = repository;
-        this.filiereRepository = filiereRepository;
-        this.moduleValidationRepository = moduleValidationRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwt = jwt;
-    }
-
     @Override
-    public List<User> findAll() {
-        return repository.findAll();
+    public List<UserDto> findAll() {
+        return repository.findAll().stream().map(x -> toDTO(x)).collect(Collectors.toList());
     }
     @Override
     public User findById(Long id) {
@@ -45,13 +42,14 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User save(User user) {
-        repository.save(user);
-        return user;
-    }
-
-    @Override
     public void deleteById(Long id) {
+        User userToDelete = repository.findById(id).orElseThrow();
+        List <ModuleValidation> userToDeleteModules =moduleValidationRepository.findByUserId(id);
+        Iterator<ModuleValidation> iterator = userToDeleteModules.iterator();
+        while (iterator.hasNext()) {
+            moduleValidationRepository.delete(iterator.next());
+        }
+
         repository.deleteById(id);
     }
 
@@ -73,11 +71,10 @@ public class UserService implements IUserService{
         repository.save(user);
 
         for (Module module : filiere.getModules()) {
-            ModuleValidation mv = ModuleValidation.builder()
-                .user(user)
-                .module(module)
-                .statut(StatutModule.A_FAIRE)
-                .build();
+            ModuleValidation mv = new  ModuleValidation();
+            mv.setUser(user);
+            mv.setModule(module);
+            mv.setStatut(StatutModule.A_FAIRE);
             moduleValidationRepository.save(mv);
         }
     }
@@ -95,7 +92,7 @@ public class UserService implements IUserService{
 
     @Override
     public List<UserDto> getEtudiants() {
-        return repository.findByRole(Role.ETUDIANT).stream().map(user -> toDTO(user)).collect(Collectors.toList());
+        return repository.findByRole(Role.ETUDIANT).stream().map(user -> toDTO(user)).filter(user->user.getRole().name()=="ETUDIANT").collect(Collectors.toList());
     }
 
     @Override
@@ -121,7 +118,7 @@ public class UserService implements IUserService{
                 .nom(userDto.getNom())
                 .prenom(userDto.getPrenom())
                 .role(userDto.getRole())
-                .superFiliere(userDto.getSuperFiliere())
+                .superFiliere(superFiliereRepository.findById(userDto.getSuperFiliereId()).get())
                 .build();
         String email = generateEmail(user);
         String rawPassword = generatePassword();
@@ -146,6 +143,12 @@ public class UserService implements IUserService{
         return repository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public UserDto save(User user) {
+        repository.save(user);
+        return toDTO(user);
+    }
+
     public UserDto toDTO(User user) {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
@@ -154,10 +157,11 @@ public class UserService implements IUserService{
         dto.setPrenom(user.getPrenom());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
-        dto.setFiliere(user.getFiliere());
+        dto.setSuperFiliereId(user.getSuperFiliere().getId());
         dto.setDateEntree(user.getDateEntree());
         dto.setProgression(calculateProgression(user));
-        dto.setSuperFiliere(user.getSuperFiliere());
+        if(user.getFiliere()!=null) {
+        dto.setFiliereId(user.getFiliere().getId());}
         return dto;
     }
 
@@ -172,5 +176,24 @@ public class UserService implements IUserService{
             }
         }
         return (termine/total) * 100;
+    }
+
+    public UserCreationResponse resetPassword(Long id) {
+        String newPassword = generatePassword();
+        User user = repository.findById(id).orElseThrow();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        repository.save(user);
+
+        //réponse
+        UserCreationResponse gen = new UserCreationResponse();
+        gen.setEmail(user.getEmail());
+        gen.setPassword(newPassword);
+        return gen;
+    }
+
+    @Override
+    public List<UserDto> getUsersBySuperFiliere(Long superFiliereId) {
+        return repository.findBySuperFiliere_Id(superFiliereId).stream()
+                .map(x -> toDTO(x)).filter(user->user.getRole().name()=="ETUDIANT").collect(Collectors.toList());
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class   SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -45,6 +45,7 @@ public class SecurityConfig {
                 ).permitAll()
                     //les chemins vers l'authentification
                 .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/error/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

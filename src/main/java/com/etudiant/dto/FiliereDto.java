@@ -16,5 +16,5 @@ public class FiliereDto {
     private List<Long> usersIds;
     private List<Long> modulesIds;
     private Long superFiliereId;
-    private int nbEtudiants;
+    private Integer nbEtudiants;
 }

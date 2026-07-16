@@ -51,7 +51,6 @@ public class FiliereController {
     @PostMapping()
     public FiliereDto save(@RequestBody FiliereDto filiereDto) {
 
-        System.out.println(">>>>>>>>>>>>>>>>>><<<<<<<<<<<< POST /filieres");
         return service.save(filiereDto);
     }
 
